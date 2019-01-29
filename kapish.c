@@ -119,6 +119,23 @@ int lsh_launch(char **args){
   return 1;
 }
 
+int cd(char **args){
+  if(args[1] == NULL){
+    fprintf(stderr, "Expected argument tp \"cd\"\n");
+  }
+  else if(strcasecmp("HOME", args[1] == 0)){
+    dir = chdir(getenv("HOME"));
+    if( dir == -1)
+      perror("Error");
+  }
+  else{
+    dir = chdir(args[1]);
+    if(dir == -1)
+      perror("Error");
+  }
+  return 1;
+}
+
 int main(int argc, char **argv){
   // Load config files
   // Run command loop
