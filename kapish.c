@@ -90,6 +90,35 @@ char **split_line(char *line){
   return tokens;
 }
 
+int execute(char **args){
+  if(args[0] == NULL){
+    return 1;
+  }
+  else if(strcmp(args[0],"cd") == 0)
+    return cd(args);
+  else if(strcmp(args[0],"exit") == 0)
+    return exit(args);
+  else if(strcmp(args[0],"setenv") == 0)
+    return setenv(args);
+  else if(strcmp(args[0],"unsetenv") == 0)
+    return unsetenv(args);
+  else
+    return lsh_launch(args);
+}
+
+int lsh_launch(char **args){
+  pid = fork();
+  if(pid == 0){
+    //if(execvp(args[0], args) == -1))
+      perror("Error");
+  }
+  else if(pid < 0)
+    perror("Error");
+  else
+    waitpid(pid, NULL, 0);
+  return 1;
+}
+
 int main(int argc, char **argv){
   // Load config files
   // Run command loop
