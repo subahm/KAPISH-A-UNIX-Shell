@@ -136,6 +136,11 @@ int cd(char **args){
   return 1;
 }
 
+void setenv(char **args){}
+void unsetenv(char **args){}
+int exit(){}
+void readFile(){}
+
 int main(int argc, char **argv){
   // Load config files
   // Run command loop
