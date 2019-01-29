@@ -12,6 +12,7 @@
 
 #define LSH_RL_BUFSIZE 513
 #define LSH_TOK_BUFSIZE 64
+#define LSH_TOK_DELIM " \t\r\n\a"
 
 void lsh_loop(void){
   char *line;
@@ -62,6 +63,31 @@ char *read_line(){
 
 char **split_line(char *line){
   int size = LSH_RL_BUFSIZE;
+  int length = strlen(line);
+  int pos = 0;
+  char **tokens_backup;
+  char **tokens = malloc(sizeof(char *) *length);
+  if(!tokens){
+    fprintf(stderr, "Problem in tokenizing\n");
+    exit(EXIT_FAILURE);
+  }
+  *tokens = strtok(line, LSH_TOK_DELIM);
+  while(tokens[pos] != NULL){
+    token[pos+1] = strtok(NULL, LSH_TOK_DELIM);
+    pos++;
+
+    if(pos >= bufsize){
+      bufsize += LSH_TOK_BUFSIZE;
+      tokens_backup = tokens;
+      tokens = realloc(tokens, bufsize *sizeof(char*));
+      if(!tokens){
+        free(tokens_backup);
+        fprintf(stderr, "allocation error\n");
+        exit(EXIT_FAILURE);
+      }
+    }
+  }
+  return tokens;
 }
 
 int main(int argc, char **argv){
