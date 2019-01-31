@@ -40,10 +40,6 @@ int kapish_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
 }
 
-/*
-  Builtin function implementations.
-*/
-
 /**
    @brief Bultin command: change directory.
    @param args List of args.  args[0] is "cd".  args[1] is the directory.
@@ -67,15 +63,15 @@ int kapish_setvar(char **args){
     var = "";
   if(setenv(args[1], var, 1))
     perror("kapish: Error");
-  //printf("%s\n", getenv(args[1]));
+  //printf("%s\n", getenv(args[1]));    Used for testing this function
   return 1;
 }
 
 int kapish_unsetvar(char **args){
-  //printf("%s\n", getenv(args[1]));
+  //printf("%s\n", getenv(args[1]));    Used for testing this function
   if(unsetenv(args[1]))
     perror("kapish: Error");
-  //printf("%s\n", getenv(args[1]));
+  //printf("%s\n", getenv(args[1]));    Used for testing this function
   return 1;
 }
 
@@ -90,34 +86,29 @@ int kapish_exit(char **args)
 }
 
 void read_kapishrc(){
-	/* ./kapishrc will always be in the home directory - get the path */
-	char * home = getenv("HOME");
-	char * path = malloc(sizeof(char)*(strlen(home)+strlen("/.kapishrc")+1));
-	if(!path){
+  /* getting path to the home directory*/
+	//char * path = malloc(sizeof(char)*(strlen(getenv("HOME"))+strlen("/.kapishrc")+1));
+  char * path = getenv("HOME");
+  if(!path){
 		fprintf(stderr, "Problem allocating in read_kapishrc()\n");
 		exit(EXIT_FAILURE);
 	}
-	//path = memcpy(path, home, strlen(home));
-  path = home;
 
-	/* find ./kapishrc if it exists */
+  /* reading .kapishrc file*/
 	FILE * fp = fopen(strcat(path, "/.kapishrc"), "r");
 
-	/* no .kapishrc, done */
+	/* error in reading .kapishrc*/
 	if(!fp){
     fprintf(stderr, "Problem reading kapishrc()\n");
 		exit(EXIT_FAILURE);
 	}
 
-	/* array to store each line of kapishrc */
-	char line[512];
+	char array[512];
 	printf("Reading .kapishrc\n");
-	/* get and print line */
-	while(fgets(line, sizeof(line), fp)){
-		printf("? %s", line);
+	while(fgets(array, sizeof(array), fp)){
+		printf("? %s", array);
 	}
   printf("\n");
-	//free(path);
 	fclose(fp);
 }
 
