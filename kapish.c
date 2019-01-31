@@ -136,6 +136,18 @@ int terminate_kapish(){
   return 0;
 }
 
+int get_path(char **args){
+  if(args[1] == NULL){
+    fprintf(stderr, "Expected argument tp \"cd\"\n");
+  }
+  else{
+    char *path;
+    getcwd(path, sizeof(path));
+    printf("%s\n", path);
+  }
+  return 1;
+}
+
 void readFile(){
   char *path = malloc(sizeof(char)*(strlen(getenv("HOME")+strlen("/.kapishrc")+1)));
   if(!path){
@@ -169,6 +181,8 @@ int execute(char **args){
     return setEnvironment(args);
   else if(strcmp(args[0],"unsetenv") == 0)
     return unsetEnvironment(args);
+  else if(strcmp(args[0],"pwd") == 0)
+    return get_path(args);
   else
     return lsh_launch(args);
 }
