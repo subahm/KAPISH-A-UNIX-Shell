@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 /*
   Function Declarations for builtin shell commands:
@@ -18,6 +19,7 @@ int kapish_help(char **args);
 int kapish_exit(char **args);
 int kapish_setvar(char **args);
 int kapish_unsetvar(char **args);
+pid_t pid;
 
 /*
   List of builtin commands, followed by their corresponding functions.
@@ -119,12 +121,16 @@ void read_kapishrc(){
  */
 int kapish_launch(char **args)
 {
-  pid_t pid;
+
   int status;
 
   pid = fork();
   if (pid == 0) {
     // Child process
+    // For testing of killing child process
+    /*while(1){
+      printf("Testing \n");
+    }*/
     if (execvp(args[0], args) == -1) {
       perror("kapish: Error");
     }
@@ -134,11 +140,12 @@ int kapish_launch(char **args)
     perror("kapish: Error");
   } else {
     // Parent process
+    signal(SIGINT, SIG_IGN);
     do {
       waitpid(pid, &status, WUNTRACED);
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    signal(SIGINT, SIG_DFL);
   }
-
   return 1;
 }
 
